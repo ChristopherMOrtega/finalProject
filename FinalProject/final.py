@@ -146,11 +146,10 @@ class Game(simpleGE.Scene):
         self.lblPlayerHealth.size = (200, 25)
 
         self.fly = Fly(self)
-        
+
         self.lblWinLose = simpleGE.Label()
         self.lblWinLose.text = None
         self.lblWinLose.center = (-200, -200)
-        
 
         self.gameSprite = [
             self.player,
@@ -160,7 +159,7 @@ class Game(simpleGE.Scene):
             self.lblPlayerHealth,
             self.boss,
             self.bossAttacks,
-            self.lblWinLose
+            self.lblWinLose,
         ]
         self.gameGroup = self.makeSpriteGroup(self.gameSprite)
 
@@ -185,9 +184,10 @@ class Game(simpleGE.Scene):
         self.quitButton.center = (400, 300)
         self.quitButton.bgColor = (255, 255, 255)
         self.quitButton.clicked = False
-        
 
+        self.bossHit = simpleGE.Sound("blip.ogg")
 
+        self.playerHit = simpleGE.Sound("blop.ogg")
 
         self.resetButton = simpleGE.Button()
         self.resetButton.text = "Restart"
@@ -266,6 +266,7 @@ class Game(simpleGE.Scene):
             if self.fly.collidesWith(self.player):
                 print("fly collided")
                 self.playerMaxHealth = 0
+                self.lblPlayerHealth.text = f"Player Health: {self.playerMaxHealth}"
 
             for shot in self.shots:
                 offScreen = not shot.isVisible() and (shot.x < 0)
@@ -275,6 +276,7 @@ class Game(simpleGE.Scene):
                     print(
                         f"collision detected for shot {self.shots.index(shot)}"
                     )  # debugging
+                    self.bossHit.play()
                     self.bossMaxHealth -= 1
                     self.lblBossHealth.text = f"Boss Health: {self.bossMaxHealth}"
                     shot.hide()
@@ -287,6 +289,7 @@ class Game(simpleGE.Scene):
                     attack.update()
                     if attack.collidesWith(self.player):
                         print(f"player hit by {self.bossAttacks.index(attack)}")
+                        self.playerHit.play()
                         self.playerMaxHealth -= 1
                         self.lblPlayerHealth.text = (
                             f"Player Health: {self.playerMaxHealth}"
@@ -325,10 +328,8 @@ class Game(simpleGE.Scene):
         self.buttonGroup.empty()
         self.quitButton.clicked = False
         self.resetButton.clicked = False
-        
-        
-        self.lblWinLose.center = (-200, -200)
 
+        self.lblWinLose.center = (-200, -200)
 
         # Reset player
         self.playerMaxHealth = 5
