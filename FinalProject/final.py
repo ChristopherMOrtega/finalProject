@@ -1,3 +1,14 @@
+"""
+Christopher Ortega
+Final Project
+12/7/23
+Final Project for CS 120
+
+
+All visual and audio assests are made by me
+"""
+
+
 import simpleGE, pygame, random
 
 
